@@ -1,6 +1,10 @@
 /* Vow — Weston & Eve. Local only. Equal always. */
 (function () {
   const STORE = 'vow-westeve-v1';
+  const DEFAULT_PAIR = {
+    weston: { name: 'Weston', initial: 'W' },
+    eve: { name: 'Eve', initial: 'E' }
+  };
 
   const $ = (sel, el = document) => el.querySelector(sel);
   const $$ = (sel, el = document) => [...el.querySelectorAll(sel)];
@@ -33,6 +37,35 @@
     localStorage.setItem(STORE, JSON.stringify(data));
   }
 
+  function ensurePair(data) {
+    if (!data.pair) data.pair = {};
+    ['weston', 'eve'].forEach((key) => {
+      const def = DEFAULT_PAIR[key];
+      const cur = data.pair[key] || {};
+      const name = (typeof cur.name === 'string' && cur.name.trim()) ? cur.name.trim() : def.name;
+      let initial = (typeof cur.initial === 'string' && cur.initial.trim())
+        ? cur.initial.trim().slice(0, 2)
+        : def.initial;
+      data.pair[key] = { name, initial };
+    });
+    return data.pair;
+  }
+
+  function nameOf(key) {
+    const p = ensurePair(state);
+    return (p[key] && p[key].name) || DEFAULT_PAIR[key].name;
+  }
+
+  function initialOf(key) {
+    const p = ensurePair(state);
+    return (p[key] && p[key].initial) || DEFAULT_PAIR[key].initial;
+  }
+
+  function monogram() {
+    return `${initialOf('eve')} + ${initialOf('weston')}`;
+  }
+
+
   function ensureDay(data, key) {
     if (!data.days) data.days = {};
     if (!data.days[key]) {
@@ -44,7 +77,47 @@
   }
 
   let state = load();
+  ensurePair(state);
   let asker = 'weston'; // weston asks eve | eve asks weston
+
+  /* ---------- pair labels (display only; keys stay weston/eve) ---------- */
+  function applyPairLabels() {
+    ensurePair(state);
+    const mark = $('#pairMark');
+    if (mark) mark.textContent = monogram();
+
+    const names = $('#homeNames');
+    if (names) {
+      names.innerHTML = '';
+      names.appendChild(document.createTextNode(nameOf('weston') + ' '));
+      const amp = document.createElement('span');
+      amp.className = 'amp';
+      amp.textContent = '&';
+      names.appendChild(amp);
+      names.appendChild(document.createTextNode(' ' + nameOf('eve')));
+    }
+
+    const board = $('#boardCopy');
+    if (board) {
+      board.textContent =
+        `Y or N · ${nameOf('eve')} · My Best Friend · Equals · one breath · one heart · Always, Always, Always · Love + Music · ${monogram()}`;
+    }
+
+    const whoW = $('[data-asker="weston"]');
+    const whoE = $('[data-asker="eve"]');
+    if (whoW) whoW.textContent = `${nameOf('weston')} asks ${nameOf('eve')}`;
+    if (whoE) whoE.textContent = `${nameOf('eve')} asks ${nameOf('weston')}`;
+
+    const labW = $('label[for="vowWeston"]');
+    const labE = $('label[for="vowEve"]');
+    if (labW) labW.textContent = `${nameOf('weston')}'s vow`;
+    if (labE) labE.textContent = `${nameOf('eve')}'s vow`;
+
+    const titleW = $('#pairNameWeston');
+    const titleE = $('#pairNameEve');
+    if (titleW) titleW.textContent = nameOf('weston');
+    if (titleE) titleE.textContent = nameOf('eve');
+  }
 
   /* ---------- navigation ---------- */
   function showView(name) {
@@ -58,6 +131,7 @@
     if (name === 'home') renderHome();
     if (name === 'ask') renderAsk();
     if (name === 'vows') renderVows();
+    if (name === 'board') applyPairLabels();
   }
 
   $$('.nav-btn').forEach((btn) => {
@@ -92,12 +166,17 @@
   }
 
   function renderHome() {
+    applyPairLabels();
     const key = todayKey();
     const day = (state.days && state.days[key]) || null;
     const asks = (day && day.asks) || {};
     const parts = [];
-    if (asks.weston && asks.weston.answer === 'yes') parts.push('Weston asked · Eve said yes');
-    if (asks.eve && asks.eve.answer === 'yes') parts.push('Eve asked · Weston said yes');
+    if (asks.weston && asks.weston.answer === 'yes') {
+      parts.push(`${nameOf('weston')} asked · ${nameOf('eve')} said yes`);
+    }
+    if (asks.eve && asks.eve.answer === 'yes') {
+      parts.push(`${nameOf('eve')} asked · ${nameOf('weston')} said yes`);
+    }
     const el = $('#homeToday');
     if (parts.length) {
       el.textContent = parts.join(' · ');
@@ -119,10 +198,13 @@
 
   /* ---------- ask ---------- */
   function askerLabel() {
-    return asker === 'weston' ? 'Weston → Eve' : 'Eve → Weston';
+    return asker === 'weston'
+      ? `${nameOf('weston')} → ${nameOf('eve')}`
+      : `${nameOf('eve')} → ${nameOf('weston')}`;
   }
 
   function renderAsk() {
+    applyPairLabels();
     $('#askTo').textContent = askerLabel();
     $$('.who').forEach((b) => b.classList.toggle('on', b.dataset.asker === asker));
 
@@ -153,7 +235,10 @@
         const a = asks[who];
         if (!a) return;
         const li = document.createElement('li');
-        const from = who === 'weston' ? 'Weston → Eve' : 'Eve → Weston';
+        const from =
+          who === 'weston'
+            ? `${nameOf('weston')} → ${nameOf('eve')}`
+            : `${nameOf('eve')} → ${nameOf('weston')}`;
         const mark =
           a.answer === 'yes'
             ? '<span class="yes-mark">Yes</span>'
@@ -187,6 +272,7 @@
 
   /* ---------- vows ---------- */
   function renderVows() {
+    applyPairLabels();
     const key = todayKey();
     $('#vowDateLabel').textContent = formatDate(key);
     const day = ensureDay(state, key);
@@ -223,16 +309,24 @@
       div.className = 'history-day';
       let html = `<time datetime="${k}">${formatDate(k)}</time>`;
       if (v.weston && v.weston.trim()) {
-        html += `<p class="side"><em>Weston</em></p><p class="vow-text"></p>`;
+        html += `<p class="side"><em></em></p><p class="vow-text"></p>`;
       }
       if (v.eve && v.eve.trim()) {
-        html += `<p class="side"><em>Eve</em></p><p class="vow-text"></p>`;
+        html += `<p class="side"><em></em></p><p class="vow-text"></p>`;
       }
       div.innerHTML = html;
+      const sides = div.querySelectorAll('.side em');
       const texts = div.querySelectorAll('.vow-text');
       let i = 0;
-      if (v.weston && v.weston.trim()) texts[i++].textContent = v.weston;
-      if (v.eve && v.eve.trim()) texts[i++].textContent = v.eve;
+      if (v.weston && v.weston.trim()) {
+        sides[i].textContent = nameOf('weston');
+        texts[i].textContent = v.weston;
+        i += 1;
+      }
+      if (v.eve && v.eve.trim()) {
+        sides[i].textContent = nameOf('eve');
+        texts[i].textContent = v.eve;
+      }
       hist.appendChild(div);
     });
   }
@@ -250,6 +344,57 @@
     renderVows();
   });
 
+  /* ---------- pair settings (tap monogram) ---------- */
+  function openPairSettings() {
+    ensurePair(state);
+    $('#editNameEve').value = nameOf('eve');
+    $('#editInitialEve').value = initialOf('eve');
+    $('#editNameWeston').value = nameOf('weston');
+    $('#editInitialWeston').value = initialOf('weston');
+    const panel = $('#pairSettings');
+    panel.hidden = false;
+    panel.setAttribute('aria-hidden', 'false');
+    $('#editInitialEve').focus();
+  }
+
+  function closePairSettings() {
+    const panel = $('#pairSettings');
+    panel.hidden = true;
+    panel.setAttribute('aria-hidden', 'true');
+  }
+
+  function savePairSettings() {
+    const nE = ($('#editNameEve').value || '').trim() || DEFAULT_PAIR.eve.name;
+    const iE = ($('#editInitialEve').value || '').trim().slice(0, 2) || DEFAULT_PAIR.eve.initial;
+    const nW = ($('#editNameWeston').value || '').trim() || DEFAULT_PAIR.weston.name;
+    const iW = ($('#editInitialWeston').value || '').trim().slice(0, 2) || DEFAULT_PAIR.weston.initial;
+    state.pair = {
+      eve: { name: nE, initial: iE },
+      weston: { name: nW, initial: iW }
+    };
+    save(state);
+    applyPairLabels();
+    closePairSettings();
+    const active = $('.view.on');
+    if (active && active.id === 'view-ask') renderAsk();
+    if (active && active.id === 'view-vows') renderVows();
+    if (active && active.id === 'view-home') renderHome();
+  }
+
+  $('#pairMark').addEventListener('click', openPairSettings);
+  $('#pairMark').addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      openPairSettings();
+    }
+  });
+  $('#pairSettingsCancel').addEventListener('click', closePairSettings);
+  $('#pairSettingsSave').addEventListener('click', savePairSettings);
+  $('#pairSettingsBackdrop').addEventListener('click', closePairSettings);
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && !$('#pairSettings').hidden) closePairSettings();
+  });
+
   /* ---------- PWA ---------- */
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
@@ -257,5 +402,6 @@
     });
   }
 
+  applyPairLabels();
   showView('home');
 })();

@@ -1,4 +1,4 @@
-const CACHE = 'vow-v1';
+const CACHE = 'vow-v2';
 const ASSETS = [
   './',
   './index.html',

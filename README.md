@@ -46,5 +46,6 @@ Client-side only. All asks and vows live in `localStorage` on the device. No bac
 3. Vows — letter-style textareas, seal, past-days history  
 4. Board — gallery of the real chalkboard  
 5. Offline PWA (manifest + service worker)
+6. Editable initials & names (tap the monogram) — defaults E + W / Eve & Weston; Equal always
 
 Soft Mom. Equal always.

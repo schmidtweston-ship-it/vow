@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#0B0B0C">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="description" content="Vow — Weston & Eve. Ask each other every day. Equal always.">
+  <meta name="description" content="Vow — ask each other every day. Equal always. Initials and names editable.">
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="icon.svg">
   <link rel="apple-touch-icon" href="icon-192.png">
@@ -21,7 +21,7 @@
   <div class="bg-chalk" aria-hidden="true"></div>
 
   <header class="top">
-    <p class="mark">E + W</p>
+    <button type="button" class="mark" id="pairMark" title="Tap to edit initials" aria-label="Edit initials and names">E + W</button>
     <h1 class="title">Vow</h1>
     <p class="tagline">Equal always · Always, always, always</p>
     <div class="cord" aria-hidden="true"></div>
@@ -41,7 +41,7 @@
         <img src="assets/golden-cord-web.jpg" alt="The chalkboard: Will You Marry Me? Equal always. Gold cord." width="900" height="1200">
         <figcaption>My Best Friend · Equals · one breath · one heart</figcaption>
       </figure>
-      <p class="names">Weston <span class="amp">&amp;</span> Eve</p>
+      <p class="names" id="homeNames">Weston <span class="amp">&amp;</span> Eve</p>
       <p class="lede">Every day we ask. Every day we vow. That is how we got through — and how we stay.</p>
       <p class="today-line" id="homeToday">Today waits for your ask.</p>
       <p class="streak" id="homeStreak" hidden></p>
@@ -93,7 +93,7 @@
     <section id="view-board" class="view" aria-label="The chalkboard" hidden>
       <p class="eyebrow">The board</p>
       <h2 class="ask-line small">Will You Marry Me?</h2>
-      <p class="board-copy">Y or N · Eve · My Best Friend · Equals · one breath · one heart · Always, Always, Always · Love + Music · E + W</p>
+      <p class="board-copy" id="boardCopy">Y or N · Eve · My Best Friend · Equals · one breath · one heart · Always, Always, Always · Love + Music · E + W</p>
       <div class="cord thin" aria-hidden="true"></div>
       <div class="gallery">
         <figure>
@@ -115,6 +115,44 @@
   <footer class="foot">
     <p>1 + 1 = 2 · Private on this device · Equal always</p>
   </footer>
+
+  <!-- Pair settings: tap monogram -->
+  <div id="pairSettings" class="pair-settings" hidden aria-hidden="true" role="dialog" aria-labelledby="pairSettingsTitle">
+    <div class="pair-settings-backdrop" id="pairSettingsBackdrop"></div>
+    <div class="pair-settings-panel">
+      <p class="eyebrow" id="pairSettingsTitle">Your monogram</p>
+      <p class="pair-hint">Change initials or names. Saved on this device only.</p>
+      <div class="cord thin" aria-hidden="true"></div>
+
+      <div class="pair-row">
+        <label class="pair-field">
+          <span class="pair-label" id="pairNameEve">Eve</span>
+          <input type="text" id="editNameEve" class="pair-input name" maxlength="32" autocomplete="off" spellcheck="false">
+        </label>
+        <label class="pair-field initial">
+          <span class="pair-label">Initial</span>
+          <input type="text" id="editInitialEve" class="pair-input initial" maxlength="2" autocomplete="off" spellcheck="false" aria-label="Eve initial">
+        </label>
+      </div>
+
+      <div class="pair-row">
+        <label class="pair-field">
+          <span class="pair-label" id="pairNameWeston">Weston</span>
+          <input type="text" id="editNameWeston" class="pair-input name" maxlength="32" autocomplete="off" spellcheck="false">
+        </label>
+        <label class="pair-field initial">
+          <span class="pair-label">Initial</span>
+          <input type="text" id="editInitialWeston" class="pair-input initial" maxlength="2" autocomplete="off" spellcheck="false" aria-label="Weston initial">
+        </label>
+      </div>
+
+      <div class="pair-actions">
+        <button type="button" class="pair-btn ghost" id="pairSettingsCancel">Cancel</button>
+        <button type="button" class="pair-btn" id="pairSettingsSave">Save</button>
+      </div>
+      <p class="pair-foot">Equal always</p>
+    </div>
+  </div>
 
   <script src="app.js"></script>
 </body>
