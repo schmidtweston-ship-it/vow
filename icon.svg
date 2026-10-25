@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+<rect width="64" height="64" fill="#0B0B0C"/>
+<path d="M32 52 C12 36 8 22 18 14 C24 9 30 12 32 18 C34 12 40 9 46 14 C56 22 52 36 32 52Z" fill="none" stroke="#F4EFE6" stroke-width="2"/>
+<text x="32" y="36" text-anchor="middle" fill="#C9A24A" font-size="10" font-family="Georgia,serif">E+W</text>
+</svg>

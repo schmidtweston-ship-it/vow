@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0B0B0C">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="description" content="Vow — Weston & Eve. Ask each other every day. Equal always.">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icon.svg">
+  <link rel="apple-touch-icon" href="icon-192.png">
+  <title>Vow — Equal always</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="bg-slate" aria-hidden="true"></div>
+  <div class="bg-chalk" aria-hidden="true"></div>
+
+  <header class="top">
+    <p class="mark">E + W</p>
+    <h1 class="title">Vow</h1>
+    <p class="tagline">Equal always · Always, always, always</p>
+    <div class="cord" aria-hidden="true"></div>
+  </header>
+
+  <nav class="nav" role="tablist" aria-label="Vow">
+    <button type="button" class="nav-btn on" data-view="home">Home</button>
+    <button type="button" class="nav-btn" data-view="ask">Ask</button>
+    <button type="button" class="nav-btn" data-view="vows">Vows</button>
+    <button type="button" class="nav-btn" data-view="board">Board</button>
+  </nav>
+
+  <main>
+    <!-- HOME -->
+    <section id="view-home" class="view on" aria-label="Home">
+      <figure class="hero">
+        <img src="assets/golden-cord-web.jpg" alt="The chalkboard: Will You Marry Me? Equal always. Gold cord." width="900" height="1200">
+        <figcaption>My Best Friend · Equals · one breath · one heart</figcaption>
+      </figure>
+      <p class="names">Weston <span class="amp">&amp;</span> Eve</p>
+      <p class="lede">Every day we ask. Every day we vow. That is how we got through — and how we stay.</p>
+      <p class="today-line" id="homeToday">Today waits for your ask.</p>
+      <p class="streak" id="homeStreak" hidden></p>
+      <button type="button" class="cta" data-goto="ask">Will you marry me?</button>
+    </section>
+
+    <!-- ASK -->
+    <section id="view-ask" class="view" aria-label="Daily ask" hidden>
+      <p class="eyebrow">Today’s ask</p>
+      <h2 class="ask-line" id="askPrompt">Will You Marry Me?</h2>
+      <p class="ask-to" id="askTo">Weston → Eve</p>
+      <div class="cord thin" aria-hidden="true"></div>
+
+      <div class="who-row">
+        <button type="button" class="who on" data-asker="weston">Weston asks Eve</button>
+        <button type="button" class="who" data-asker="eve">Eve asks Weston</button>
+      </div>
+
+      <div class="yn" id="ynBlock">
+        <button type="button" class="yn-btn yes" data-answer="yes">Y</button>
+        <span class="yn-or">or</span>
+        <button type="button" class="yn-btn no" data-answer="no">N</button>
+      </div>
+
+      <p class="seal" id="askSeal" hidden>Always · sealed for today</p>
+      <ul class="ask-log" id="askLog" aria-label="Recent asks"></ul>
+    </section>
+
+    <!-- VOWS -->
+    <section id="view-vows" class="view" aria-label="Daily vows" hidden>
+      <p class="eyebrow">Today’s vows</p>
+      <p class="date-label" id="vowDateLabel"></p>
+      <div class="cord thin" aria-hidden="true"></div>
+
+      <label class="letter-label" for="vowWeston">Weston’s vow</label>
+      <textarea id="vowWeston" class="letter" rows="5" placeholder="Write it like a letter…"></textarea>
+
+      <label class="letter-label" for="vowEve">Eve’s vow</label>
+      <textarea id="vowEve" class="letter" rows="5" placeholder="Write it like a letter…"></textarea>
+
+      <button type="button" class="cta soft" id="saveVows">Seal today’s vows</button>
+      <p class="seal" id="vowSeal" hidden>Sealed · Equal always</p>
+
+      <h3 class="history-title">Past days</h3>
+      <div class="history" id="vowHistory"></div>
+    </section>
+
+    <!-- BOARD / GALLERY -->
+    <section id="view-board" class="view" aria-label="The chalkboard" hidden>
+      <p class="eyebrow">The board</p>
+      <h2 class="ask-line small">Will You Marry Me?</h2>
+      <p class="board-copy">Y or N · Eve · My Best Friend · Equals · one breath · one heart · Always, Always, Always · Love + Music · E + W</p>
+      <div class="cord thin" aria-hidden="true"></div>
+      <div class="gallery">
+        <figure>
+          <img src="assets/golden-cord-web.jpg" alt="Chalkboard with gold cord and candles" loading="lazy">
+          <figcaption>Imagine · gold cord</figcaption>
+        </figure>
+        <figure>
+          <img src="assets/chalkboard-hero.jpg" alt="The ask chalkboard" loading="lazy">
+          <figcaption>The ask board</figcaption>
+        </figure>
+        <figure>
+          <img src="assets/chalkboard-alt.jpg" alt="Chalkboard, second view" loading="lazy">
+          <figcaption>Same board · another night</figcaption>
+        </figure>
+      </div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <p>1 + 1 = 2 · Private on this device · Equal always</p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>

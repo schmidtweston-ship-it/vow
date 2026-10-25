@@ -1,0 +1,14 @@
+{
+  "name": "Vow — Weston & Eve",
+  "short_name": "Vow",
+  "description": "Ask each other every day. Say your vows every day. Equal always.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#0B0B0C",
+  "theme_color": "#0B0B0C",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+  ]
+}
